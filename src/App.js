@@ -10,6 +10,7 @@ import {
 import ViewCourses from './views/ViewCourses';
 import AdminLogin from './views/AdminLogin';
 import AdminDashboard from './views/AdminDashboard';
+import AdminCourses from './views/AdminCourses';
 // import your route components too
 
 function App() {
@@ -30,6 +31,10 @@ function App() {
         </Route>
         <Route path="/admindashboard" element={
           <AdminDashboard />
+        }>
+        </Route>
+        <Route path="/AdminCoursesView" element={
+          <AdminCourses />
         }>
         </Route>
       </Routes>

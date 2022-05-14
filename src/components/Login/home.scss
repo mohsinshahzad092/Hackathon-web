@@ -84,11 +84,15 @@
 
   a {
     text-decoration: none;
+    
   }
 
   h2 {
 
     color: white;
+    &:hover {
+      font-weight: bold;
+    }
 
   }
 }

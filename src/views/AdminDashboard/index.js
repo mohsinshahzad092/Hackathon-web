@@ -1,4 +1,4 @@
-import { faGraduationCap, faIdCard, faKey, faSchool, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faGraduationCap, faIdCard, faKey, faSchool, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -94,16 +94,23 @@ export default function AdminDashboard() {
             });
     }
     const courseHandler = async () => {
+        if (!courseName || !courseDuration || !courseOutline) {
+            return (
+                toast.error("Empty fields")
+            )
+        }
         console.log("clicked")
         // Add a new document with a generated id.
+        var id = new Date().getTime().toString();
         try {
-            const docRef = await addDoc(collection(db, "course"), {
+            await setDoc(doc(db, "course", id), {
                 courseName: courseName,
                 courseDuration: courseDuration,
-                courseOutline: courseOutline
+                courseOutline: courseOutline,
+                enable: true,
+                id: id,
+                courseStatus: "Course Open"
             });
-
-            console.log("Document written with ID: ", docRef.id);
             toast("Course added successfully")
         } catch (error) {
             console.log(error)
@@ -233,7 +240,7 @@ export default function AdminDashboard() {
             <div style={{
                 backgroundColor: "#46A81A",
                 color: "white",
-                height:"150px"
+                height: "150px"
 
             }}>
                 <div style={{
@@ -242,8 +249,8 @@ export default function AdminDashboard() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     margin: "0 auto",
-                    fontSize:"18px"
-                    
+                    fontSize: "18px"
+
                 }}>
 
                     <div style={{
@@ -254,7 +261,7 @@ export default function AdminDashboard() {
                     }}
                         onClick={handleReset}>
 
-                        <FontAwesomeIcon icon={faKey} size="2xl" />
+                        <FontAwesomeIcon icon={faKey} size="xl" />
                         <div style={{
                             marginTop: "15px",
                             fontSize: "20px"
@@ -271,7 +278,7 @@ export default function AdminDashboard() {
                     }}
                         onClick={handleAdmin}
                     >
-                        <FontAwesomeIcon icon={faUser} size="2xl" />
+                        <FontAwesomeIcon icon={faUser} size="xl" />
                         <div style={{
                             marginTop: "15px",
                             fontSize: "20px"
@@ -284,7 +291,7 @@ export default function AdminDashboard() {
                         margin: "20px",
                         flex: "1",
                     }}>
-                        <FontAwesomeIcon icon={faIdCard} size="2xl" />
+                        <FontAwesomeIcon icon={faIdCard} size="xl" />
                         <div style={{
                             marginTop: "15px",
                             fontSize: "20px"
@@ -297,7 +304,7 @@ export default function AdminDashboard() {
                         margin: "20px",
                         flex: "1",
                     }}>
-                        <FontAwesomeIcon icon={faSchool} size="2xl" />
+                        <FontAwesomeIcon icon={faSchool} size="xl" />
                         <div style={{
                             marginTop: "15px",
                             fontSize: "20px"
@@ -312,13 +319,33 @@ export default function AdminDashboard() {
                         cursor: "pointer"
                     }}
                         onClick={handleCourse}>
-                        <FontAwesomeIcon icon={faGraduationCap} size="2xl" />
+                        <FontAwesomeIcon icon={faGraduationCap} size="xl" />
                         <div style={{
                             marginTop: "15px",
                             fontSize: "20px"
                         }}>
                             Course status
                         </div>
+                    </div>
+                    <div style={{
+                        textAlign: "center",
+                        margin: "20px",
+                        flex: "1",
+                        cursor: "pointer"
+
+                    }}>
+                        <Link to="/AdminCoursesView" style={{
+                            textDecoration: "none",
+                            color: "white"
+                        }}>
+                            <FontAwesomeIcon icon={faEye} size="xl" />
+                            <div style={{
+                                marginTop: "15px",
+                                fontSize: "20px"
+                            }}>
+                                View All Courses
+                            </div>
+                        </Link>
                     </div>
                 </div>
             </div>
