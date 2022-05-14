@@ -324,7 +324,7 @@ export default function AdminDashboard() {
                             marginTop: "15px",
                             fontSize: "20px"
                         }}>
-                            Course status
+                            Add New Course
                         </div>
                     </div>
                     <div style={{
