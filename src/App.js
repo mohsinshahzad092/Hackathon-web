@@ -8,6 +8,7 @@ import {
   Route,
 } from "react-router-dom";
 import ViewCourses from './views/ViewCourses';
+import AdminLogin from './views/AdminLogin';
 // import your route components too
 
 function App() {
@@ -20,6 +21,10 @@ function App() {
         </Route>
         <Route path="/viewcourses" element={
           <ViewCourses />
+        }>
+        </Route>
+        <Route path="/adminlogin" element={
+          <AdminLogin />
         }>
         </Route>
       </Routes>
