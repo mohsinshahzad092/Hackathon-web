@@ -5,8 +5,10 @@ import { Link } from 'react-router-dom'
 import './adminDashboard.scss'
 import { useNavigate } from "react-router-dom";
 import { auth, db, storage } from '../../config/firebase'
-import { getAuth, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { getFirestore, collection, addDoc, doc, setDoc } from "firebase/firestore";
 import { Button, Modal } from 'react-bootstrap'
@@ -14,12 +16,26 @@ import { Button, Modal } from 'react-bootstrap'
 export default function AdminDashboard() {
     let navigate = useNavigate();
 
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [resetShow, setShow] = useState(false);
+    const [adminShow, setAdminShow] = useState(false);
+    const [courseShow, setCourseShow] = useState(false);
+    const resetHandleClose = () => setShow(false);
+    const adminHandleClose = () => setAdminShow(false);
+    const courseHandleClose = () => setCourseShow(false);
+    const handleReset = () => setShow(true);
+    const handleAdmin = () => setAdminShow(true);
+    const handleCourse = () => setCourseShow(true);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
+    const [newPasswordd, setNewPassword] = useState("");
+
+    const [newAdminEmail, setNewAdminEmail] = useState("");
+    const [newAdminPassword, setNewAdminPassword] = useState("");
+
+    const [courseName, setCourseName] = useState("");
+    const [courseDuration, setCourseDuration] = useState("");
+    const [courseOutline, setCourseOutline] = useState("");
 
 
     const logoutHandler = () => {
@@ -31,13 +47,75 @@ export default function AdminDashboard() {
             // An error happened.
         });
     }
+
     const resetHandler = () => {
         console.log("clicked")
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+
+                const userNew = auth.currentUser;
+                const newPassword = newPasswordd;
+
+                updatePassword(userNew, newPassword).then(() => {
+                    // Update successful.
+                    toast("password changed successfully")
+                }).catch((error) => {
+                    console.log(error)
+                    // An error ocurred
+                    // ...
+                });
+
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(error.code, error.message)
+                toast.error("credential are incorrect")
+            });
+
+    }
+    const adminHandler = () => {
+        createUserWithEmailAndPassword(auth, newAdminEmail, newAdminPassword)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                toast("New User Created")
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage)
+                toast.error("Credentials incorrect")
+                // ..
+            });
+    }
+    const courseHandler = async () => {
+        console.log("clicked")
+        // Add a new document with a generated id.
+        try {
+            const docRef = await addDoc(collection(db, "course"), {
+                courseName: courseName,
+                courseDuration: courseDuration,
+                courseOutline: courseOutline
+            });
+
+            console.log("Document written with ID: ", docRef.id);
+            toast("Course added successfully")
+        } catch (error) {
+            console.log(error)
+        }
+
+
     }
 
 
     return (
         <div>
+            <ToastContainer />
             <div className="nav">
                 <a href="/">
                     <img src="/images/login-logo.png" />
@@ -49,7 +127,8 @@ export default function AdminDashboard() {
                 </div>
             </div>
 
-            <Modal show={show} onHide={handleClose}>
+            {/* Reset Password */}
+            <Modal show={resetShow} onHide={resetHandleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Reset Password</Modal.Title>
                 </Modal.Header>
@@ -59,6 +138,7 @@ export default function AdminDashboard() {
                         width: "100%"
                     }} placeholder='email' value={email} onChange={(e) => setEmail(e.target.value)} />
                 </Modal.Body>
+
                 <Modal.Body>
                     <Modal.Title>Type your current Password</Modal.Title>
                     <input style={{
@@ -69,14 +149,75 @@ export default function AdminDashboard() {
                     <Modal.Title>Type your new Password</Modal.Title>
                     <input style={{
                         width: "100%"
-                    }} placeholder='new password' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                    }} placeholder='new password' value={newPasswordd} onChange={(e) => setNewPassword(e.target.value)} />
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="success" onClick={resetHandleClose}>
                         Close
                     </Button>
                     <Button variant="primary" onClick={resetHandler}>
                         Reset Password
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+            <Modal show={adminShow} onHide={adminHandleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add Admin</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Modal.Title>Email of Admin</Modal.Title>
+                    <input style={{
+                        width: "100%"
+                    }} placeholder='email' value={newAdminEmail} onChange={(e) => setNewAdminEmail(e.target.value)} />
+                </Modal.Body>
+                <Modal.Body>
+                    <Modal.Title>Password for Admin</Modal.Title>
+                    <input style={{
+                        width: "100%"
+                    }} placeholder='password' value={newAdminPassword} onChange={(e) => setNewAdminPassword(e.target.value)} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="success" onClick={adminHandleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={adminHandler}>
+                        Add Admin
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+            <Modal show={courseShow} onHide={courseHandleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Course Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Modal.Title>Course Name</Modal.Title>
+                    <input style={{
+                        width: "100%"
+                    }} placeholder='Course Name' value={courseName} onChange={(e) => setCourseName(e.target.value)} />
+                </Modal.Body>
+                {/* Course Status */}
+                <Modal.Body>
+                    <Modal.Title>Course Duration</Modal.Title>
+                    <input style={{
+                        width: "100%"
+                    }} placeholder='Course Duration' value={courseDuration} onChange={(e) => setCourseDuration(e.target.value)} />
+                </Modal.Body>
+                <Modal.Body>
+                    <Modal.Title>Course Outline</Modal.Title>
+                    <input style={{
+                        width: "100%"
+                    }} placeholder='Course Outline' value={courseOutline} onChange={(e) => setCourseOutline(e.target.value)} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="success" onClick={courseHandleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={courseHandler}>
+                        Add Course
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -90,8 +231,9 @@ export default function AdminDashboard() {
                 Admin Dashboard
             </h1>
             <div style={{
-                backgroundColor: "#e0e0e0",
-                color: "#003f68"
+                backgroundColor: "#46A81A",
+                color: "white",
+                height:"150px"
 
             }}>
                 <div style={{
@@ -100,6 +242,8 @@ export default function AdminDashboard() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     margin: "0 auto",
+                    fontSize:"18px"
+                    
                 }}>
 
                     <div style={{
@@ -108,7 +252,7 @@ export default function AdminDashboard() {
                         flex: "1",
                         cursor: "pointer"
                     }}
-                        onClick={handleShow}>
+                        onClick={handleReset}>
 
                         <FontAwesomeIcon icon={faKey} size="2xl" />
                         <div style={{
@@ -122,7 +266,11 @@ export default function AdminDashboard() {
                         textAlign: "center",
                         margin: "20px",
                         flex: "1",
-                    }}>
+                        cursor: "pointer"
+
+                    }}
+                        onClick={handleAdmin}
+                    >
                         <FontAwesomeIcon icon={faUser} size="2xl" />
                         <div style={{
                             marginTop: "15px",
@@ -161,7 +309,9 @@ export default function AdminDashboard() {
                         textAlign: "center",
                         margin: "20px",
                         flex: "1",
-                    }}>
+                        cursor: "pointer"
+                    }}
+                        onClick={handleCourse}>
                         <FontAwesomeIcon icon={faGraduationCap} size="2xl" />
                         <div style={{
                             marginTop: "15px",

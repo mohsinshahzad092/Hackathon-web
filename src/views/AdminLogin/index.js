@@ -14,6 +14,8 @@ import {
 import { Link } from 'react-router-dom';
 import { auth, db, storage } from '../../config/firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { getFirestore, collection, addDoc, doc, setDoc } from "firebase/firestore";
 
@@ -40,6 +42,7 @@ export default function AdminLogin() {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                toast.error("Credentials are incorrect!")
             });
     }
 
@@ -47,6 +50,7 @@ export default function AdminLogin() {
 
     return (
         <div>
+            <ToastContainer />
             <div className="nav">
                 <a href="/">
                     <img src="/images/login-logo.png" />

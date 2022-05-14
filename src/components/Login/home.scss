@@ -1,3 +1,22 @@
+.navbar-green {
+
+  width: 100vw;
+  height: 50px;
+  background-color: #46a81a;
+  margin-top: 10px;
+  color: white;
+}
+
+.navbar-blue {
+
+  width: 100vw;
+  height: 10px;
+  background-color: #0D7AD5;
+
+
+
+}
+
 .nav {
   max-width: 1128px;
   margin: auto;
@@ -49,6 +68,28 @@
     background-color: rgba(112, 181, 249, 0.15);
     color: #0a66c2;
     text-decoration: none;
+  }
+}
+
+.view-Courses-Img {
+
+  width: 300;
+  height: 80px;
+  background: #46a81a;
+  border-radius: 100px;
+  color: white;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  a {
+    text-decoration: none;
+  }
+
+  h2 {
+
+    color: white;
+
   }
 }
 
