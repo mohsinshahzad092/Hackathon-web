@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import './auth.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import {
     faUser,
     faEnvelope,
@@ -11,17 +12,35 @@ import {
     faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from 'react-router-dom';
+import { auth, db, storage } from '../../config/firebase';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+
+import { getFirestore, collection, addDoc, doc, setDoc } from "firebase/firestore";
+
 
 
 export default function AdminLogin() {
+    let navigate = useNavigate();
 
     const [userName, setUserName] = useState("")
     const [userEmail, setUserEmail] = useState("")
     const [password, setPassword] = useState("")
 
 
-    const submitHandeler = () => {
+    const submitHandeler = (e) => {
+        e.preventDefault()
 
+        signInWithEmailAndPassword(auth, userEmail, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                navigate(`/admindashboard`)
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
     }
 
 
@@ -60,8 +79,8 @@ export default function AdminLogin() {
                             type="email"
                             placeholder="Email Address"
                             name="userEmail"
-                            onChange={userEmail}
-                            value={(e) => setUserEmail(e.target.value)}
+                            onChange={(e) => setUserEmail(e.target.value)}
+                            value={userEmail}
                         />
                     </div>
                     <div className="input-box">

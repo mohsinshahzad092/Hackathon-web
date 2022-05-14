@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import ViewCourses from './views/ViewCourses';
 import AdminLogin from './views/AdminLogin';
+import AdminDashboard from './views/AdminDashboard';
 // import your route components too
 
 function App() {
@@ -25,6 +26,10 @@ function App() {
         </Route>
         <Route path="/adminlogin" element={
           <AdminLogin />
+        }>
+        </Route>
+        <Route path="/admindashboard" element={
+          <AdminDashboard />
         }>
         </Route>
       </Routes>
