@@ -6,11 +6,11 @@ function Login() {
         <Container>
             <Nav>
                 <a href="/">
-                    <img src="/images/login-logo.svg"/>
+                    <img src="/images/login-logo.png" />
                 </a>
                 <div>
                     <Join>
-                        Join Now
+                        SignUp
                     </Join>
                     <Signin>
                         SignIn
@@ -19,9 +19,14 @@ function Login() {
             </Nav>
             <Section>
                 <Hero>
-                    <h1>Welcome to your professional community</h1>
-                    <img src="/images/login-hero.svg"  />
+                    <h1>Want to View New Courses ? Click Below</h1>
+                    <div>
+                        <img src="/images/viewCourses.png" />
+                    </div>
                 </Hero>
+                <FeedSection>
+                    <div dangerouslySetInnerHTML={{ __html: "<iframe src='https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FSaylaniMassTraining%2F&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId' width='340' height='500' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowfullscreen='true' allow='autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share'></iframe>" }} />
+                </FeedSection>
             </Section>
         </Container>
     )
@@ -96,7 +101,7 @@ const Form = styled.div`
 
 
 const Hero = styled.div`
-    width: 100%;
+    flex: 1;
     h1 {
         padding-bottom: 0;
         width: 55%;
@@ -112,20 +117,25 @@ const Hero = styled.div`
         }
     }
 
-    img {
-        z-index: -1;
-        width : 700px;
-        height: : 670px;
-        position: absolute;
-        bottom: -2px;
-        right : -150px;
-        @media(max-width: 768px) {
-            top: 230px;=
-            width: initial;
-            height: initial;
+    div {
+        width: 300px;
+
+        img {
+            z-index: -1;
+            width : 100%;
+            height: : 100%;
+            @media(max-width: 768px) {
+                top: 230px;=
+                width: initial;
+                height: initial;
+            }
         }
     }
 
+
+`
+
+const FeedSection = styled.div`
 `
 
 const Join = styled.a`
