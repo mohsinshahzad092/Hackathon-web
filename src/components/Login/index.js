@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from "react-router-dom";
 
 function Login() {
     return (
@@ -21,7 +22,9 @@ function Login() {
                 <Hero>
                     <h1>Want to View New Courses ? Click Below</h1>
                     <div>
-                        <img src="/images/viewCourses.png" />
+                        <Link to="/viewcourses">
+                            <img src="/images/viewCourses.png" />
+                        </Link>
                     </div>
                 </Hero>
                 <FeedSection>
