@@ -22,12 +22,6 @@ function Login() {
                     <h1>Welcome to your professional community</h1>
                     <img src="/images/login-hero.svg"  />
                 </Hero>
-                <Form>
-                    <Google>
-                        <img src="/images/google.svg" />
-                        Sign in with Google
-                    </Google>
-                </Form>
             </Section>
         </Container>
     )
